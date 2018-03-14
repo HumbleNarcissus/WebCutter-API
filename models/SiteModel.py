@@ -22,6 +22,10 @@ class SiteModel(db.Model):
     def find_by_fullLink(cls, site_name):
         return SiteModel.query.filter_by(full_link=site_name).first()
 
+    @classmethod
+    def return_link(cls, shortcut):
+        return SiteModel.query.filter_by(short_link=shortcut).first()
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
