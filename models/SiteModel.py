@@ -22,9 +22,9 @@ class SiteModel(db.Model):
     
     def json(self):
         if isinstance(self.expired_date, datetime):
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), 'working': self.is_working}
+            return {'full_link': self.full_link, 'short_link': self.short_link, 'expiry_date': self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), 'working': self.is_working}
         else:
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': None, 'working': self.is_working}
+            return {'full_link': self.full_link, 'short_link': self.short_link, 'expiry_date': None, 'working': self.is_working}
             
 
     @classmethod    
@@ -39,9 +39,20 @@ class SiteModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
     def check_dates(self):
         for item in SiteModel.query.all():
             if datetime.now() > item.expired_date:
                 item.is_working = False
         db.session.commit()
+    
+    def check_duplicate(self, shortcut):
+        duplicate = self.return_link(shortcut)
+        if duplicate == None:
+            return True
+        else:
+            return False

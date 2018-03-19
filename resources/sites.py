@@ -18,6 +18,9 @@ class Sites(Resource):
 
     def post(self):
         args = Sites.parser.parse_args()
+        result = SiteModel.find_by_fullLink(args['site'])
+        if result != None:
+            return "Site already exists", 400
         sites = SiteModel(args['site'], Sites.create_shortcut())
         sites.save_to_db()
         return '', 201
@@ -39,6 +42,11 @@ class Site(Resource):
 
     def put(self, site):
         args = Site.parser.parse_args()
+
+        result = SiteModel.find_by_fullLink(args['site'])
+        if result != None:
+            return "Site already exists", 400
+
         item = SiteModel.find_by_fullLink(site)
         
         if item is None:
@@ -51,4 +59,12 @@ class Site(Resource):
         return "", 200
 
     def delete(self, site):
-        pass
+        args = Site.parser.parse_args()
+        item = SiteModel.find_by_fullLink(site)
+
+        if item is None:
+            return "Entered site dose not exist", 404
+        else:
+            item.delete_from_db()
+            return "Item deleted", 201
+        
