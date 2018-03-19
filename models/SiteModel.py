@@ -9,20 +9,22 @@ class SiteModel(db.Model):
     full_link = db.Column(db.String, nullable=False)
     short_link = db.Column(db.String, nullable=False)
     expired_date = db.Column(db.DateTime, nullable=True)
+    is_working = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, full_link, short_link):
         self.full_link = full_link
         self.short_link = short_link
         self.expired_date = datetime.now() + timedelta(hours=1)
+        self.is_working = True
     
     def __repr__(self):
-        return 'full {}, short{}, expired{}'.format(self.full_link, self.short_link, self.expired_date.strftime("%Y-%m-%d %H:%M:%S"))
+        return 'full {}, short{}, expired{}, working{}'.format(self.full_link, self.short_link, self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), self.is_working)
     
     def json(self):
         if isinstance(self.expired_date, datetime):
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': self.expired_date.strftime("%Y-%m-%d %H:%M:%S")}
+            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), 'working': self.is_working}
         else:
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': None}
+            return {'full_link': self.full_link, 'short_link': self.short_link, 'expired': None, 'working': self.is_working}
             
 
     @classmethod    
@@ -37,3 +39,9 @@ class SiteModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
+    def check_dates(self):
+        for item in SiteModel.query.all():
+            if datetime.now() > item.expired_date:
+                item.is_working = False
+        db.session.commit()

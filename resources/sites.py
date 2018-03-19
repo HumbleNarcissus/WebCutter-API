@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse, abort
 from models.SiteModel import SiteModel
 from sqlalchemy import update
-from db import db
 import string
 import random
 
@@ -14,6 +13,7 @@ class Sites(Resource):
     )
 
     def get(self):
+        SiteModel.check_dates(self)
         return {'sites': [x.json() for x in SiteModel.query.all()]}, 200
 
     def post(self):
