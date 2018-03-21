@@ -19,11 +19,13 @@ def create_app(config):
     api.add_resource(Site, '/site/<site>')
     api.add_resource(Shortcut, '/<short_link>')
 
+
     from db import db, migrate
     db.init_app(app)
     migrate.init_app(app, db)
 
     return app
 
-
-app = create_app('configs.DevelopmentConfig')
+if __name__ == '__main__':
+    app = create_app('configs.DevelopmentConfig')
+    app.run()

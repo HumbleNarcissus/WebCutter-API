@@ -1,0 +1,5 @@
+Flask
+Flask-Migrate
+Flask-RESTful
+alembic
+Flask-SQLALchemy

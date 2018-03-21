@@ -11,8 +11,6 @@ class Shortcut(Resource):
         
         result = SiteModel.return_link(short_link)
 
-        print("Result: {}".format(result.is_working))
-
         if result == None:
             return "Site does not exist", 404
         elif result.is_working == False:
