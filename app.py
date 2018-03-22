@@ -7,10 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 from resources.sites import Sites, Site
 from resources.shortcut import Shortcut
 from models.SiteModel import SiteModel
+from flask_cors import CORS
 
 def create_app(config):
     app = Flask(__name__)
-
+    CORS(app)
+    
     #config
     app.config.from_object(config)
     api = Api(app)
@@ -27,5 +29,6 @@ def create_app(config):
     return app
 
 if __name__ == '__main__':
-    app = create_app('configs.DevelopmentConfig')
+    import os
+    app = create_app(os.environ['APP_SETTINGS'])
     app.run()
