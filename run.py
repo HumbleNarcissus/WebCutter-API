@@ -1,3 +1,7 @@
+'''
+Init and run app
+'''
+
 from app import create_app
 
 import os

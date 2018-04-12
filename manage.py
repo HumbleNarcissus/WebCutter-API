@@ -1,3 +1,6 @@
+'''
+Run database migrations etc.
+'''
 from app import create_app
 from flask_migrate import MigrateCommand
 from flask_script import Manager
