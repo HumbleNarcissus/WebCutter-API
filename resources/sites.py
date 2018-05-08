@@ -40,7 +40,10 @@ class Sites(Resource):
         if result != None:
             return "Site already exists", 400
 
-        sites = SiteModel(args['site'], Sites.create_shortcut())
+        #create unique site's code
+        new_code = Sites.create_shortcut();
+
+        sites = SiteModel(args['site'], new_code)
         sites.save_to_db()
 
         return 'Created new site', 201
@@ -50,7 +53,14 @@ class Sites(Resource):
         '''
         Generate new random site code
         '''
-        return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=6))    
+        new_code = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k = 6))
+
+        for item in SiteModel.query.all():
+            if item.short_link == new_code:
+                return create_shortcut()
+
+        return new_code
+
 
 
 class Site(Resource):

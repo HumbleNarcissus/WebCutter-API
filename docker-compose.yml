@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  website:
+    build: .
+    command: >
+      gunicorn -b 0.0.0.0:8000
+        --reload
+        run:app
+    environment:
+      #Set your environment variables here - DATABASE_URL and SECRET_KEY
+      PYTHONUNBUFFERED: 'true'
+      APP_SETTINGS: 'configs.BaseConfig'
+      DATABASE_URL:
+      FLASK_APP: run
+      SECRET_KEY: 
+    volumes:
+      - '.:/webcutter'
+    ports:
+      - '8000:8000'
