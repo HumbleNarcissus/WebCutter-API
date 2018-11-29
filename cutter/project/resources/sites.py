@@ -8,9 +8,6 @@ class Sites(Resource):
     """
     Sites resources with all posted sites
     """
-
-
-
     # define request parser
     parser = reqparse.RequestParser()
 
