@@ -1,4 +1,6 @@
 # WebCutter-API
+[![Build Status](https://travis-ci.org/HumbleNarcissus/WebCutter-API.svg?branch=master)](https://travis-ci.org/HumbleNarcissus/WebCutter-API)
+
 Python RESTful API - Bitly like app
 
 Webcutter is an application created for fun using: Python,Flask, Flask RESTful and SQLAlchemy with PostgreSQL.
