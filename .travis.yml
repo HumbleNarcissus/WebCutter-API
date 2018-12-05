@@ -13,10 +13,10 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose -f docker-compose-dev.yml up -d --build
+  - docker-compose -f docker-compose.yml up -d --build
 
 script:
-  - docker-compose -f docker-compose-dev.yml run cutter python manage.py test
+  - docker-compose -f docker-compose.yml run cutter python manage.py test
 
 after_script:
   - docker-compose -f docker-compose.yml down
