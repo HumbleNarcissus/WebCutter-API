@@ -19,4 +19,4 @@ script:
   - docker-compose -f docker-compose-dev.yml run cutter python manage.py test
 
 after_script:
-  - docker-compose -f docker-compose-dev.yml down
+  - docker-compose -f docker-compose.yml down
