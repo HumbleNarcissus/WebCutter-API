@@ -80,7 +80,10 @@ class Site(Resource):
         """
         Get /site/<site_name>
         """
-        return {'site': SiteModel.find_by_fullLink(site).json()}, 200
+        site = SiteModel.find_by_fullLink(site)
+        if site is None:
+            return "Site does not exist", 404
+        return {'site': site.json()}, 200
 
     def put(self, site):
         """

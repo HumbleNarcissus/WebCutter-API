@@ -39,15 +39,15 @@ def create_app(script_info=None):
     from project.resources.sites import Sites, Site
     from project.resources.shortcut import Shortcut
     api.add_resource(Sites, '/sites')
-    api.add_resource(Site, '/site/<site>')
+    api.add_resource(Site, '/sites/<site>')
     api.add_resource(Shortcut, '/<short_link>')
 
     @app.route("/")
     def index():
         return render_template("index.html")
 
-    import sys
-    print(app.config, file=sys.stderr)
+    # import sys
+    # print(app.config, file=sys.stderr)
 
     # shell context for flask cli
     @app.shell_context_processor
