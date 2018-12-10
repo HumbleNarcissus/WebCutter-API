@@ -38,9 +38,11 @@ def create_app(script_info=None):
     # init resources routes
     from project.resources.sites import Sites, Site
     from project.resources.shortcut import Shortcut
+    from project.resources.auth import Register
     api.add_resource(Sites, '/sites')
     api.add_resource(Site, '/sites/<site>')
     api.add_resource(Shortcut, '/<short_link>')
+    api.add_resource(Register, '/register')
 
     @app.route("/")
     def index():
