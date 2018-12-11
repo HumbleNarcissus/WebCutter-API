@@ -20,8 +20,8 @@ class TestDevelopmentConfig(TestCase):
         self.assertFalse(current_app is None)
         self.assertTrue(
             app.config['SQLALCHEMY_DATABASE_URI'] ==
-            os.environ.get('DATABASE_URL')
-        )
+            os.environ.get('DATABASE_URL'))
+        self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
 
 
 class TestTestingConfig(TestCase):
@@ -37,6 +37,8 @@ class TestTestingConfig(TestCase):
             app.config['SQLALCHEMY_DATABASE_URI'] ==
             os.environ.get('DATABASE_TEST_URL')
         )
+        self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
+
 
 if __name__ == '__main__':
     unittest.main()

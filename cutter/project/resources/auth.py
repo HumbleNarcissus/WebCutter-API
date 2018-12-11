@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import jsonify, request
 from sqlalchemy import exc, or_
 
-from project import db
+from project import db, bcrypt
 from .user_model import User
 
 
@@ -18,6 +18,7 @@ class Register(Resource):
         
         username = post_data.get('username')
         email = post_data.get('email')
+        password=post_data.get('password')
         
         try:
             user = User.query.filter(
@@ -26,7 +27,8 @@ class Register(Resource):
             if not user:
                 new_user = User(
                     username=username,
-                    email=email
+                    email=email,
+                    password=password
                 )
                 db.session.add(new_user)
                 db.session.commit()
@@ -37,6 +39,34 @@ class Register(Resource):
         except (exc.IntegrityError, ValueError) as e:
             db.session.rollback()
             return {}, 400
+    
+    
+class Login(Resource):
+    def post(self):
+        post_data = request.get_json()
+        if not post_data:
+            return {"status": "fail", "message": "Invalid payload."}, 400
+        
+        username = post_data.get('username')
+        password = post_data.get('password')
+
+        try:
+            # fetch the user data
+            user = User.query.filter_by(username=username).first()
+            if user and bcrypt.check_password_hash(user.password, password):
+                auth_token = user.encode_auth_token(user.id)
+                if auth_token:
+                    return {
+                        "status": "success",
+                        "message": "Successfully logged in",
+                        "auth_token": auth_token.decode()
+                    }, 200
+            else:
+                return {"message": "User does not exist."}, 404
+        except Exception as e:
+            return {"message": "Server error. Try again."}, 500
+
+        
 
 
 

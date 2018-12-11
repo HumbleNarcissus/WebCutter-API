@@ -7,14 +7,17 @@ Author: Maciej Tarach
 
 # imports
 import os
+
+import flask_cors
 from flask import Flask, render_template
 from flask_restful import Api
-import flask_cors
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
 migrate = Migrate()
+bcrypt = Bcrypt()
 
 
 def create_app(script_info=None):
@@ -34,15 +37,18 @@ def create_app(script_info=None):
     # init extensions
     db.init_app(app)
     migrate.init_app(app, db)
+    bcrypt.init_app(app)
 
     # init resources routes
     from project.resources.sites import Sites, Site
     from project.resources.shortcut import Shortcut
-    from project.resources.auth import Register
+    from project.resources.auth import Register, Login
     api.add_resource(Sites, '/sites')
     api.add_resource(Site, '/sites/<site>')
     api.add_resource(Shortcut, '/<short_link>')
     api.add_resource(Register, '/register')
+    api.add_resource(Login, '/login')
+
 
     @app.route("/")
     def index():

@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from .SiteModel import SiteModel
+from project.resources.utils import authenticate
 import string
 import random
 
@@ -19,7 +20,8 @@ class Sites(Resource):
         help="This field cannot be blank!"
     )
 
-    def get(self):
+    @authenticate
+    def get(self, resp):
         """
         GET /sites - getting all sites
         """
@@ -27,6 +29,7 @@ class Sites(Resource):
         # return all sites as json
         return {'sites': [x.json() for x in SiteModel.query.all()]}, 200
 
+    @authenticate
     def post(self):
         '''
         POST /sites - post new site
@@ -76,6 +79,7 @@ class Site(Resource):
         help="This field cannot be blank!"
     )
 
+    @authenticate
     def get(self, site):
         """
         Get /site/<site_name>
@@ -85,6 +89,7 @@ class Site(Resource):
             return "Site does not exist", 404
         return {'site': site.json()}, 200
 
+    @authenticate
     def put(self, site):
         """
         Edit or enter new site
@@ -108,6 +113,7 @@ class Site(Resource):
 
         return "", 200
 
+    @authenticate
     def delete(self, site):
         """
         DELETE /site/<site_name>
