@@ -14,24 +14,47 @@ class SiteModel(db.Model):
     short_link = db.Column(db.String, nullable=False)
     expired_date = db.Column(db.DateTime, nullable=True)
     is_working = db.Column(db.Boolean, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id'), nullable=False)
+    user = db.relationship(
+        'User',
+        backref=db.backref('users', lazy=True))
 
-    def __init__(self, full_link, short_link):
+    def __init__(self, full_link, short_link, user_id):
         self.full_link = full_link
         self.short_link = short_link
         self.expired_date = datetime.now() + timedelta(hours=1)
         self.is_working = True
+        self.user_id = user_id
 
     def __repr__(self):
-        return 'full {}, short{}, expired{}, working{}'.format(self.full_link, self.short_link, self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), self.is_working)
+        return 'full {}, short{}, expired{}, working{}'.format(
+            self.full_link,
+            self.short_link,
+            self.expired_date.strftime("%Y-%m-%d %H:%M:%S"),
+            self.is_working
+        )
 
     def json(self):
         """
         return item as json
         """
         if isinstance(self.expired_date, datetime):
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expiry_date': self.expired_date.strftime("%Y-%m-%d %H:%M:%S"), 'working': self.is_working}
+            return {
+                'id': self.id,
+                'full_link': self.full_link,
+                'short_link': self.short_link,
+                'expiry_date': self.expired_date.strftime("%Y-%m-%d %H:%M:%S"),
+                'working': self.is_working
+            }
         else:
-            return {'full_link': self.full_link, 'short_link': self.short_link, 'expiry_date': None, 'working': self.is_working}
+            return {
+                'id': self.id,
+                'full_link': self.full_link,
+                'short_link': self.short_link,
+                'expiry_date': None,
+                'working': self.is_working
+            }
 
     @classmethod
     def find_by_fullLink(cls, site_name):

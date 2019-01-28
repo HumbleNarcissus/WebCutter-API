@@ -1,5 +1,6 @@
 """
-Webcutter Api - RESTful aplication working like the Bitly. If you post some site eg. "google.com",
+Webcutter Api - RESTful aplication working like the Bitly.
+If you post some site eg. "google.com",
 Webcutter will generate random short code for you to access that page.
 
 Author: Maciej Tarach
@@ -48,7 +49,6 @@ def create_app(script_info=None):
     api.add_resource(Shortcut, '/<short_link>')
     api.add_resource(Register, '/register')
     api.add_resource(Login, '/login')
-
 
     @app.route("/")
     def index():

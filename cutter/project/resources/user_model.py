@@ -4,6 +4,7 @@ from project import db, bcrypt
 import jwt
 from flask import current_app
 
+
 class User(db.Model):
 
     __tablename__ = 'users'
@@ -14,7 +15,8 @@ class User(db.Model):
     active = db.Column(db.Boolean(), default=True, nullable=False)
     created_date = db.Column(db.DateTime, default=func.now(), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    
+    sites = db.relationship('SiteModel')
+
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
@@ -27,14 +29,15 @@ class User(db.Model):
             'email': self.email,
             'active': self.active,
         }
-    
+
     def encode_auth_token(self, user_id):
         """Generate the auth token"""
         try:
             payload = {
                 'exp': datetime.utcnow() + timedelta(
                     days=current_app.config.get('TOKEN_EXPIRATION_DAYS'),
-                    seconds=current_app.config.get('TOKEN_EXPIRATION_SECONDS')),
+                    seconds=current_app.config.get('TOKEN_EXPIRATION_SECONDS')
+                ),
                 'iat': datetime.utcnow(),
                 'sub': user_id
             }
@@ -45,7 +48,7 @@ class User(db.Model):
             )
         except Exception as e:
             return e
-    
+
     @staticmethod
     def decode_auth_token(auth_token):
         """

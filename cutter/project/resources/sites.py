@@ -26,11 +26,13 @@ class Sites(Resource):
         GET /sites - getting all sites
         """
         SiteModel.check_dates(self)
+
         # return all sites as json
-        return {'sites': [x.json() for x in SiteModel.query.all()]}, 200
+        return {'sites': [x.json() for x in SiteModel.query.filter_by(
+            user_id=self).all()]}, 200
 
     @authenticate
-    def post(self):
+    def post(self, resp):
         '''
         POST /sites - post new site
         '''
@@ -46,7 +48,7 @@ class Sites(Resource):
         # create unique site's code
         new_code = Sites.create_shortcut()
 
-        sites = SiteModel(args['site'], new_code)
+        sites = SiteModel(args['site'], new_code, self)
         sites.save_to_db()
 
         return 'Created new site', 201
@@ -56,7 +58,10 @@ class Sites(Resource):
         """
         Generate new random site code
         """
-        new_code = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=6))
+        new_code = ''.join(random.choices(
+            string.ascii_uppercase + string.ascii_lowercase + string.digits,
+            k=6)
+        )
 
         for item in SiteModel.query.all():
             if item.short_link == new_code:
@@ -80,17 +85,19 @@ class Site(Resource):
     )
 
     @authenticate
-    def get(self, site):
+    def get(self, resp, site):
         """
-        Get /site/<site_name>
+        Get /sites/<site_name>
         """
-        site = SiteModel.find_by_fullLink(site)
-        if site is None:
+        print(site)
+        querySite = SiteModel.find_by_fullLink(site)
+
+        if querySite is None:
             return "Site does not exist", 404
-        return {'site': site.json()}, 200
+        return {'site': querySite.json()}, 200
 
     @authenticate
-    def put(self, site):
+    def put(self, resp, site):
         """
         Edit or enter new site
         """
@@ -114,11 +121,10 @@ class Site(Resource):
         return "", 200
 
     @authenticate
-    def delete(self, site):
+    def delete(self, site, resp):
         """
-        DELETE /site/<site_name>
+        DELETE /sites/<site_name>
         """
-        args = Site.parser.parse_args()
         item = SiteModel.find_by_fullLink(site)
 
         if item is None:

@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import jsonify, request
+from flask import request
 from sqlalchemy import exc, or_
 
 from project import db, bcrypt
@@ -15,15 +15,15 @@ class Register(Resource):
         post_data = request.get_json()
         if not post_data:
             return {'status': 'fail', 'message': 'Invalid payload'}, 400
-        
+
         username = post_data.get('username')
         email = post_data.get('email')
-        password=post_data.get('password')
-        
+        password = post_data.get('password')
+
         try:
             user = User.query.filter(
                 or_(User.username == username, User.email == email)).first()
-            #check if user exists
+            # check if user exists
             if not user:
                 new_user = User(
                     username=username,
@@ -35,18 +35,18 @@ class Register(Resource):
                 return {"message": "user added."}, 201
             else:
                 return {"message": "user already exists."}, 400
-        #hendle error
-        except (exc.IntegrityError, ValueError) as e:
+        # hendle error
+        except (exc.IntegrityError, ValueError):
             db.session.rollback()
             return {}, 400
-    
-    
+
+
 class Login(Resource):
     def post(self):
         post_data = request.get_json()
         if not post_data:
             return {"status": "fail", "message": "Invalid payload."}, 400
-        
+
         username = post_data.get('username')
         password = post_data.get('password')
 
@@ -63,12 +63,5 @@ class Login(Resource):
                     }, 200
             else:
                 return {"message": "User does not exist."}, 404
-        except Exception as e:
+        except Exception:
             return {"message": "Server error. Try again."}, 500
-
-        
-
-
-
-
-
