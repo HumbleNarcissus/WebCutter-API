@@ -103,25 +103,25 @@ class Site(Resource):
         """
         args = Site.parser.parse_args()
 
-        # check if site exists
+        # check if new site exists
         result = SiteModel.find_by_fullLink(args['site'])
         if result is not None:
-            return "Site already exists", 400
+            return "Site already exists", 409
 
         item = SiteModel.find_by_fullLink(site)
 
         # edit existing item or enter new one
         if item is None:
-            item = SiteModel(site, Sites.create_shortcut())
+            item = SiteModel(site, Sites.create_shortcut(), self)
         else:
             item.full_link = args['site']
 
         item.save_to_db()
 
-        return "", 200
+        return {"message": "Item edited"}, 200
 
     @authenticate
-    def delete(self, site, resp):
+    def delete(self, resp, site):
         """
         DELETE /sites/<site_name>
         """
@@ -131,4 +131,4 @@ class Site(Resource):
             return "Entered site dose not exist", 404
         else:
             item.delete_from_db()
-            return "Item deleted", 201
+            return {"message": "Item deleted"}, 200

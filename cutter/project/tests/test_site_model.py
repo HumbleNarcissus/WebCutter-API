@@ -1,8 +1,3 @@
-import json
-import unittest
-
-from project import db
-from project.resources.SiteModel import SiteModel
 from project.tests.base import BaseTestCase
 from project.tests.utils import add_site, add_user
 
