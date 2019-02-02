@@ -34,7 +34,7 @@ class Register(Resource):
                 db.session.commit()
                 return {"message": "user added."}, 201
             else:
-                return {"message": "user already exists."}, 400
+                return {"message": "That user already exists."}, 400
         # hendle error
         except (exc.IntegrityError, ValueError):
             db.session.rollback()
