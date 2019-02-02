@@ -89,11 +89,10 @@ class Site(Resource):
         """
         Get /sites/<site_name>
         """
-        print(site)
         querySite = SiteModel.find_by_fullLink(site)
 
         if querySite is None:
-            return "Site does not exist", 404
+            return {"message": "Site does not exist"}, 404
         return {'site': querySite.json()}, 200
 
     @authenticate

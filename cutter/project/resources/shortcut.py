@@ -12,10 +12,10 @@ class Shortcut(Resource):
         result = SiteModel.return_link(short_link)
 
         if result is None:
-            return "Site does not exist", 404
+            return {"message": "Site does not exist"}, 404
         # check if link has expired
         elif not result.is_working:
-            return "Link has expired", 405
+            return {"message": "Link has expired"}, 405
         else:
             # redirect to site behind short link
             return redirect("http://" + result.full_link, code=302)
