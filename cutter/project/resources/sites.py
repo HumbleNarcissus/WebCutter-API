@@ -1,8 +1,7 @@
 from flask_restful import Resource, reqparse
 from .SiteModel import SiteModel
 from project.resources.utils import authenticate
-import string
-import random
+from .utils import create_shortcut
 
 
 class Sites(Resource):
@@ -43,31 +42,15 @@ class Sites(Resource):
         result = SiteModel.find_by_fullLink(args['site'])
 
         if result is not None:
-            return "Site already exists", 400
+            return {"message": "Site already exists"}, 409
 
         # create unique site's code
-        new_code = Sites.create_shortcut()
+        new_code = create_shortcut()
 
         sites = SiteModel(args['site'], new_code, self)
         sites.save_to_db()
 
-        return 'Created new site', 201
-
-    @staticmethod
-    def create_shortcut():
-        """
-        Generate new random site code
-        """
-        new_code = ''.join(random.choices(
-            string.ascii_uppercase + string.ascii_lowercase + string.digits,
-            k=6)
-        )
-
-        for item in SiteModel.query.all():
-            if item.short_link == new_code:
-                return Sites.create_shortcut()
-
-        return new_code
+        return {"message": "Created new site"}, 201
 
 
 class Site(Resource):
@@ -105,13 +88,13 @@ class Site(Resource):
         # check if new site exists
         result = SiteModel.find_by_fullLink(args['site'])
         if result is not None:
-            return "Site already exists", 409
+            return {"message": "Site already exists"}, 409
 
         item = SiteModel.find_by_fullLink(site)
 
         # edit existing item or enter new one
         if item is None:
-            item = SiteModel(site, Sites.create_shortcut(), self)
+            item = SiteModel(site, create_shortcut(), self)
         else:
             item.full_link = args['site']
 
@@ -127,7 +110,7 @@ class Site(Resource):
         item = SiteModel.find_by_fullLink(site)
 
         if item is None:
-            return "Entered site dose not exist", 404
+            return {"message": "Entered site does not exist"}, 404
         else:
             item.delete_from_db()
             return {"message": "Item deleted"}, 200

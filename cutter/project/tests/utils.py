@@ -1,11 +1,11 @@
 from project import db
 from project.resources.SiteModel import SiteModel
-from project.resources.sites import Sites
 from project.resources.user_model import User
+from project.resources.utils import create_shortcut
 
 
 def add_site(full_link, user_id):
-    short_link = Sites.create_shortcut()
+    short_link = create_shortcut()
     site = SiteModel(
         full_link=full_link,
         short_link=short_link,

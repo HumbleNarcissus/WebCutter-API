@@ -10,7 +10,7 @@ class Register(Resource):
 
     def post(self):
         """
-        POST register/
+        POST /register
         """
         post_data = request.get_json()
         if not post_data:
@@ -42,6 +42,7 @@ class Register(Resource):
 
 
 class Login(Resource):
+
     def post(self):
         post_data = request.get_json()
         if not post_data:
