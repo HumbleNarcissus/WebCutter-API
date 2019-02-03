@@ -14,7 +14,7 @@ class Register(Resource):
         """
         post_data = request.get_json()
         if not post_data:
-            return {'status': 'fail', 'message': 'Invalid payload'}, 400
+            return {"message": "Invalid payload", "status": "fail"}, 400
 
         username = post_data.get('username')
         email = post_data.get('email')
@@ -38,7 +38,7 @@ class Register(Resource):
         # hendle error
         except (exc.IntegrityError, ValueError):
             db.session.rollback()
-            return {}, 400
+            return {"message": "Invalid payload"}, 400
 
 
 class Login(Resource):

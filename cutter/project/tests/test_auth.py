@@ -54,3 +54,56 @@ class TestAuth(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn('That user already exists.', data['message'])
+
+    def test_user_registration_invalid_json(self):
+        with self.client:
+            response = self.client.post(
+                '/register',
+                data=json.dumps({}),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual('Invalid payload', data['message'])
+
+    def test_user_registration_invalid_json_keys_no_username(self):
+        with self.client:
+            response = self.client.post(
+                '/register',
+                data=json.dumps({
+                    'email': 'test@test.com',
+                    'password': 'test'
+                }),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload', data['message'])
+
+    def test_user_registration_invalid_json_keys_no_email(self):
+        with self.client:
+            response = self.client.post(
+                '/register',
+                data=json.dumps({
+                    'username': 'test@test.com',
+                    'password': 'test'
+                }),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload', data['message'])
+
+    def test_user_registration_invalid_json_keys_no_password(self):
+        with self.client:
+            response = self.client.post(
+                '/register',
+                data=json.dumps({
+                    'username': 'test',
+                    'email': 'test@test.com'
+                }),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload', data['message'])
