@@ -1,5 +1,5 @@
 # WebCutter-API
-[![Build Status](https://travis-ci.org/HumbleNarcissus/WebCutter-API.svg?branch=master)](https://travis-ci.org/HumbleNarcissus/WebCutter-API)
+[![codecov](https://codecov.io/gh/HumbleNarcissus/WebCutter-API/branch/master/graph/badge.svg)](https://codecov.io/gh/HumbleNarcissus/WebCutter-API)
 
 Python RESTful API - Bitly like app
 
