@@ -34,6 +34,9 @@ class SiteModel(db.Model):
             self.expired_date.strftime("%Y-%m-%d %H:%M:%S"),
             self.is_working
         )
+    
+    def set_date(self, date):
+        self.expired_date = date
 
     def json(self):
         """
