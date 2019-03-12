@@ -39,7 +39,7 @@ class Sites(Resource):
         args = Sites.parser.parse_args()
 
         # check if site exists
-        result = SiteModel.find_by_fullLink(args['site'])
+        result = SiteModel.query.filter_by(user_id=self, full_link=args['site']).first()
 
         if result is not None:
             return {"message": "Site already exists"}, 409
