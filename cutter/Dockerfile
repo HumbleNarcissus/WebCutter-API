@@ -5,7 +5,8 @@ FROM python:3.6.5-slim
 RUN apt-get update && \
     apt-get -y install netcat && \
     apt-get -y install python3-dev gcc && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # set working directory
 WORKDIR /usr/src/app
