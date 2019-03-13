@@ -1,0 +1,38 @@
+version: '3.6'
+
+services:
+  cutter:
+    build:
+      context: ./cutter
+      dockerfile: Dockerfile-prod
+    expose:
+      - 5000
+    environment:
+      - FLASK_APP=manage.py
+      - FLASK_ENV=production
+      - APP_SETTINGS=project.configs.ProductionConfig
+      - DATABASE_URL=postgres://postgres:postgres@cutter-db:5432/cutter_prod
+      - DATABASE_TEST_URL=postgres://postgres:postgres@cutter-db:5432/cutter_test
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - cutter-db
+  
+  cutter-db:
+    build:
+      context: ./cutter/database
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  
+  nginx:
+    build:
+      context: ./cutter/nginx
+      dockerfile: Dockerfile-prod
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - cutter
