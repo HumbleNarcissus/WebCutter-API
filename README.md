@@ -1,5 +1,6 @@
 # WebCutter-API
 [![Build Status](https://travis-ci.org/HumbleNarcissus/WebCutter-API.svg?branch=master)](https://travis-ci.org/HumbleNarcissus/WebCutter-API) [![codecov](https://codecov.io/gh/HumbleNarcissus/WebCutter-API/branch/master/graph/badge.svg)](https://codecov.io/gh/HumbleNarcissus/WebCutter-API)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d0e0d7f1b3734f19afe348a4688a09d7)](https://www.codacy.com/app/HumbleNarcissus/WebCutter-API?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HumbleNarcissus/WebCutter-API&amp;utm_campaign=Badge_Grade)
 
 Python RESTful API - Bitly like app
 
