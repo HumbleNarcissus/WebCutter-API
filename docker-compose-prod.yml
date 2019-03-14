@@ -14,6 +14,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@cutter-db:5432/cutter_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@cutter-db:5432/cutter_test
       - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
       - cutter-db
   
