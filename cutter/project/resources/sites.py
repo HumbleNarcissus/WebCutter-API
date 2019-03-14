@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from .SiteModel import SiteModel
-from project.resources.utils import authenticate
 from .utils import create_shortcut
 
 
@@ -19,27 +19,32 @@ class Sites(Resource):
         help="This field cannot be blank!"
     )
 
-    @authenticate
-    def get(self, resp):
+    @jwt_required
+    def get(self):
         """
         GET /sites - getting all sites
         """
         SiteModel.check_dates(self)
+        _user_id = get_jwt_identity()
 
         # return all sites as json
         return {'sites': [x.json() for x in SiteModel.query.filter_by(
-            user_id=self).all()]}, 200
+            user_id=_user_id).all()]}, 200
 
-    @authenticate
-    def post(self, resp):
+    @jwt_required
+    def post(self):
         '''
         POST /sites - post new site
         '''
 
         args = Sites.parser.parse_args()
+        _user_id = get_jwt_identity()
 
         # check if site exists
-        result = SiteModel.query.filter_by(user_id=self, full_link=args['site']).first()
+        result = SiteModel.query.filter_by(
+            user_id=_user_id,
+            full_link=args['site']
+        ).first()
 
         if result is not None:
             return {"message": "Site already exists"}, 409
@@ -47,7 +52,7 @@ class Sites(Resource):
         # create unique site's code
         new_code = create_shortcut()
 
-        sites = SiteModel(args['site'], new_code, self)
+        sites = SiteModel(args['site'], new_code, _user_id)
         sites.save_to_db()
 
         return {"message": "Created new site"}, 201
@@ -67,8 +72,8 @@ class Site(Resource):
         help="This field cannot be blank!"
     )
 
-    @authenticate
-    def get(self, resp, site):
+    @jwt_required
+    def get(self, site):
         """
         Get /sites/<site_name>
         """
@@ -78,8 +83,8 @@ class Site(Resource):
             return {"message": "Site does not exist"}, 404
         return {'site': querySite.json()}, 200
 
-    @authenticate
-    def put(self, resp, site):
+    @jwt_required
+    def put(self, site):
         """
         Edit or enter new site
         """
@@ -102,8 +107,8 @@ class Site(Resource):
 
         return {"message": "Item edited"}, 200
 
-    @authenticate
-    def delete(self, resp, site):
+    @jwt_required
+    def delete(self, site):
         """
         DELETE /sites/<site_name>
         """
