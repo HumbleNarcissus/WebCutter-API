@@ -73,21 +73,22 @@ class SiteModel(db.Model):
         """
         return SiteModel.query.filter_by(short_link=shortcut).first()
 
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete_from_db(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def check_dates(self):
+    @classmethod
+    def check_dates(cls):
         """
         check if site has expired
         """
         for item in SiteModel.query.all():
             if datetime.now() > item.expired_date:
                 item.is_working = False
+        db.session.commit()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
         db.session.commit()
 
     def check_duplicate(self, shortcut):

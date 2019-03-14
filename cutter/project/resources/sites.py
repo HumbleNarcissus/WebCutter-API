@@ -19,20 +19,22 @@ class Sites(Resource):
         help="This field cannot be blank!"
     )
 
+    @classmethod
     @jwt_required
-    def get(self):
+    def get(cls):
         """
         GET /sites - getting all sites
         """
-        SiteModel.check_dates(self)
+        SiteModel.check_dates()
         _user_id = get_jwt_identity()
 
         # return all sites as json
         return {'sites': [x.json() for x in SiteModel.query.filter_by(
             user_id=_user_id).all()]}, 200
 
+    @classmethod
     @jwt_required
-    def post(self):
+    def post(cls):
         '''
         POST /sites - post new site
         '''
@@ -72,8 +74,9 @@ class Site(Resource):
         help="This field cannot be blank!"
     )
 
+    @classmethod
     @jwt_required
-    def get(self, site):
+    def get(cls, site):
         """
         Get /sites/<site_name>
         """
@@ -83,12 +86,14 @@ class Site(Resource):
             return {"message": "Site does not exist"}, 404
         return {'site': querySite.json()}, 200
 
+    @classmethod
     @jwt_required
-    def put(self, site):
+    def put(cls, site):
         """
         Edit or enter new site
         """
         args = Site.parser.parse_args()
+        _user_id = get_jwt_identity()
 
         # check if new site exists
         result = SiteModel.find_by_fullLink(args['site'])
@@ -99,16 +104,16 @@ class Site(Resource):
 
         # edit existing item or enter new one
         if item is None:
-            item = SiteModel(site, create_shortcut(), self)
+            item = SiteModel(site, create_shortcut(), _user_id)
         else:
             item.full_link = args['site']
 
         item.save_to_db()
-
         return {"message": "Item edited"}, 200
 
+    @classmethod
     @jwt_required
-    def delete(self, site):
+    def delete(cls, site):
         """
         DELETE /sites/<site_name>
         """
