@@ -38,3 +38,14 @@ services:
       - 80:80
     depends_on:
       - cutter
+  
+  swagger:
+    build:
+      context: ./swagger
+      dockerfile: Dockerfile-dev
+    ports:
+      - 3008:8080
+    environment:
+      - URL=https://petstore.swagger.io/v2/swagger.json
+    depends_on:
+      - cutter
