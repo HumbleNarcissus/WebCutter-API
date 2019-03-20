@@ -13,3 +13,4 @@ To run locally run:
 1. "docker-compose -f docker-compose.yml up -d --build" to set up and build project.
 2. "docker-compose -f docker-compose.yml exec cutter python manage.py recreate-db" to create database.
 3. "docker-compose -f docker-compose.yml exec cutter python manage.py test" to test everything is working.
+4. See all available paths at "http://165.227.122.123/swagger" or locally at "http://localhost/swagger".
