@@ -6,6 +6,7 @@ import os
 class BaseConfig(object):
     DEBUG = False
     SECRET_KEY = os.environ['SECRET_KEY']
+    JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BCRYPT_LOG_ROUNDS = 13

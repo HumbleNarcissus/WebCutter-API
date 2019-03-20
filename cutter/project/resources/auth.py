@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask import request
 from sqlalchemy import exc, or_
+from flask_jwt_extended import create_access_token
 
 from project import db, bcrypt
 from .user_model import User
@@ -55,12 +56,12 @@ class Login(Resource):
             # fetch the user data
             user = User.query.filter_by(username=username).first()
             if user and bcrypt.check_password_hash(user.password, password):
-                auth_token = user.encode_auth_token(user.id)
+                auth_token = create_access_token(identity=user.id)
                 if auth_token:
                     return {
                         "status": "success",
                         "message": "Successfully logged in",
-                        "auth_token": auth_token.decode()
+                        "auth_token": auth_token
                     }, 200
             else:
                 return {"message": "User does not exist."}, 404
