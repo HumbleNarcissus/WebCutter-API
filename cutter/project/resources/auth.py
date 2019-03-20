@@ -32,7 +32,7 @@ class Register(Resource):
                 )
                 db.session.add(new_user)
                 db.session.commit()
-                return {"message": "user added."}, 201
+                return {"message": "User added."}, 201
             else:
                 return {"message": "That user already exists."}, 400
         # hendle error

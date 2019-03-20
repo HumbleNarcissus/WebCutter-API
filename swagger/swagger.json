@@ -1,0 +1,108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "0.0.1",
+      "title": "Cutter Service",
+      "description": "Swagger spec for documenting the cutter service"
+    },
+    "servers": [
+      {
+        "url": "http://localhost"
+      }
+    ],
+    "paths": {
+      "/register": {
+        "post": {
+          "summary": "Register new user",
+          "requestBody": {
+            "description": "User to add",
+            "required": "true",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "username",
+                    "email",
+                    "password"
+                  ],
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User added"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Logs a user in",
+          "requestBody": {
+            "description": "User to log in",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "username",
+                    "password"
+                  ],
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successfully logged in"
+            }
+          }
+        }
+      },
+      "/{shortcut}": {
+        "get": {
+          "summary": "Redirect user to other site.",
+          "responses": {
+            "302": {
+              "descroption": "Redirected successfully."
+            }
+          },
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "description": "Site's shortcut code.",
+              "name": "shortcut",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+      }
+    }
+  }
