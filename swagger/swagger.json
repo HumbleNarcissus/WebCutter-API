@@ -47,7 +47,7 @@
           }
         }
       },
-      "/auth/login": {
+      "/login": {
         "post": {
           "summary": "Logs a user in",
           "requestBody": {
@@ -99,9 +99,153 @@
             }
           ]
         }
+      },
+      "/sites": {
+        "get": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "GET all sites",
+          "responses": {
+            "200": {
+              "description": "All sites returned."
+            }
+          }
+        },
+        "post": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "POST new site",
+          "requestBody": {
+            "description": "New site to add",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "site"
+                  ],
+                  "properties": {
+                    "site": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created new site."
+            }
+          }
+        }
+      },
+      "/sites/{site_name}": {
+        "get": {
+          "summary": "GET single site",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Single site returned."
+            }
+          },
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "description": "Site name",
+              "name": "site_name",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "delete": {
+          "summary": "DELETE single site",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Single site deleted."
+            }
+          },
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "description": "Site name",
+              "name": "site_name",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "put": {
+          "summary": "PUT single site",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Single site edited."
+            }
+          },
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "description": "Site name",
+              "name": "site_name",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "New site to add or edit",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "site"
+                  ],
+                  "properties": {
+                    "site": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      },
       "schemas": {
       }
     }
