@@ -109,6 +109,31 @@ class TestApi(BaseTestCase):
             self.assertIn('google.com', data['site']['full_link'])
             self.assertIsNotNone(data['site']['short_link'])
 
+    def test_single_site_not_allow_empty_string(self):
+        add_user('mac', 'mac@mac.pl', '1234qwer')
+        with self.client:
+            resp_login = self.client.post(
+                '/login',
+                data=json.dumps({
+                    'username': 'mac',
+                    'password': '1234qwer'
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
+
+            response = self.client.post(
+                '/sites',
+                data=json.dumps({
+                    'site': '',
+                }),
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 409)
+            self.assertIn("Cannot add an empty site", data['message'])
+
     def test_single_site_not_exists(self):
         add_user('mac', 'mac@mac.pl', '1234qwer')
         with self.client:

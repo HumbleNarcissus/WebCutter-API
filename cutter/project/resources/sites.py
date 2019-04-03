@@ -51,6 +51,9 @@ class Sites(Resource):
         if result is not None:
             return {"message": "Site already exists"}, 409
 
+        if not args['site']:
+            return {"message": "Cannot add an empty site"}, 409
+
         # create unique site's code
         new_code = create_shortcut()
 
@@ -99,6 +102,9 @@ class Site(Resource):
         result = SiteModel.find_by_fullLink(args['site'])
         if result is not None:
             return {"message": "Site already exists"}, 409
+
+        if not args['site']:
+            return {"message": "Cannot add an empty site"}, 409
 
         item = SiteModel.find_by_fullLink(site)
 
